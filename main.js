@@ -98,8 +98,8 @@ function send_email(to, message) {
         title: document.getElementById("mail-title").value,
         text:  document.getElementById("mail-text").value.replace("{REIKŠMĖ}", message)
     }
-    console.log(params)
-    // emailjs.send('gmail', 'main', params)
+    // console.log(params)
+    emailjs.send('gmail', 'main', params)
 }
 
 function send_it(element){
