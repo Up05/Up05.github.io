@@ -59,11 +59,12 @@ input, button, textarea {
 @media (pointer:none), (pointer:coarse) {
     form, #config {
         label {
-            width: 100%;
+            margin-top: 4px;
+            width: 95%;
             text-align: left;
         }
         input, button, textarea {
-            width: 100%;
+            width: 95%;
         }
 
     }
