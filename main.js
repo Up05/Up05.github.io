@@ -29,7 +29,7 @@ function add_box(parent, class_name) {
 }
 
 
-let mail_to_values = new Map()
+let mail_to_values = []
 
 function assign_values(element) {
 
@@ -59,11 +59,11 @@ function assign_values(element) {
     const res_log_elem = document.getElementById("res-log")
 
     res_log_elem.innerText = ""
-    mail_to_values.clear()
+    mail_to_values.length = 0
 
     for(email of emails) {
         const i = Math.floor(Math.random() * values.length)
-        mail_to_values.set(email, values[i])
+        mail_to_values.push({k: email, v: values[i]})
         res_log_elem.innerText += 
             `${email} gaus reikšmę #${i+1}, t.y.: „${cap(values[i], 20)}“\n`
         values.splice(i, 1)
@@ -106,18 +106,22 @@ function send_it(element){
     if(mail_to_values.size == 0) { highlight(element); return }
     if(by_id("mail-text").value == "") { highlight(element); return }
 
-    for([key, value] of mail_to_values) {
-        send_email(key, value)
+    for(pair of mail_to_values) {
+        send_email(pair.k, pair.v)
     }
+
+    highlight(element, "#0B5D1E", "#F1FAEE")
 }
 
 // assertions:
 
-function highlight(element) {
+function highlight(element, bg, fg) {
     const prev_bg = element.style.backgroundColor
     const prev_fg = element.style.color
-    element.style.backgroundColor = "#E63946"
-    element.style.color = "#F1FAEE"
+    if(bg == "") bg = "#E63946" 
+    if(fg == "") fg = "#F1FAEE"
+    element.style.backgroundColor = bg
+    element.style.color = fg
     setTimeout(function() {
         element.style.backgroundColor = prev_bg
         element.style.color = prev_fg
