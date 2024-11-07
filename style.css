@@ -55,3 +55,18 @@ input, button, textarea {
     border-radius: 4px;
     background-color: var(--fg);
 }
+
+@media (pointer:none), (pointer:coarse) {
+    form, #config {
+        label {
+            width: 100%;
+            text-align: left;
+        }
+        input, button, textarea {
+            width: 100%;
+        }
+
+    }
+
+
+}
