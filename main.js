@@ -103,7 +103,7 @@ function send_email(to, message) {
 }
 
 function send_it(element){
-    if(mail_to_values.size == 0) { highlight(element); return }
+    if(mail_to_values.length == 0) { highlight(element); return }
     if(by_id("mail-text").value == "") { highlight(element); return }
 
     for(pair of mail_to_values) {
@@ -111,6 +111,7 @@ function send_it(element){
     }
 
     highlight(element, "#0B5D1E", "#F1FAEE")
+    mail_to_values.length = 0
 }
 
 // assertions:
@@ -118,8 +119,8 @@ function send_it(element){
 function highlight(element, bg, fg) {
     const prev_bg = element.style.backgroundColor
     const prev_fg = element.style.color
-    if(bg == "") bg = "#E63946" 
-    if(fg == "") fg = "#F1FAEE"
+    if(bg == undefined) bg = "#E63946" 
+    if(fg == undefined) fg = "#F1FAEE"
     element.style.backgroundColor = bg
     element.style.color = fg
     setTimeout(function() {
@@ -135,6 +136,7 @@ function assert(expr, str, only_warn) {
 }
 
 document.onchange = assertions
+document.onclick  = assertions
 function assertions(event) {
     const warning_elem = document.getElementById("warnings")
     const error_elem   = document.getElementById("errors")
@@ -150,8 +152,6 @@ function assertions(event) {
         for(let i = 0; i < mail_elems.length; i ++) 
             if(mail_elems.item(i).value != undefined && mail_elems.item(i).value != "") m_count ++
             
-        console.log(v_count, m_count);
-        
         assert(v_count >= m_count, `Reikšmių yra mažiau nei pašto adresų, todėl keli adresatai gautų tą pačią reikšmę. Reikšmių skaičius = ${v_count}, pašto adresų skaičius = ${m_count}.`)
     }
 
@@ -162,6 +162,9 @@ function assertions(event) {
         assert(by_id("mail-text").value.includes("{REIKŠMĖ}"), "Laiškas neturi laukelio {REIKŠMĖ}! Kiekvienas adrestas gaus tą patį laišką ir parinktos reikšmės bus ignoruojamos!", true)
 
     }
+
+    assert(mail_to_values.length > 0, "Dabartinės reikšmės nėra priskirtos adresatams! Paspauskite „Pasirinkti reikšmes“", true)
+
 
     if(warning_elem.innerText != "" || error_elem.innerText != "") {
         by_id("log").style.visibility = "visible"
