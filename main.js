@@ -99,7 +99,7 @@ function send_email(to, message) {
         text:  document.getElementById("mail-text").value.replace("{REIKŠMĖ}", message)
     }
     // console.log(params)
-    emailjs.send('gmail', 'main', params)
+    emailjs.send('gustosiunta', 'main', params)
 }
 
 function send_it(element){
