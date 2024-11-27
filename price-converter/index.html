@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>$/ft² ir €/m² skaičiuotuvas</title>
+</head>
+<body>
+
+    <label id="param-surface-ratio"> 1 ft² / 1 m² = </label> <br>      
+    <label id="param-pvm"> PVM = </label> <br>
+    <label> 1 € / 1 $ = </label>     
+    <input id="param-euro-dollar"></input>        
+    
+    <script crossorigin="anonymous">
+        const SQ_FOOT_METER_COEF = 10.76387
+        const PVM = 0.21
+       
+        const req = fetch(
+            "https://www.lb.lt/webservices/FxRates/FxRates.asmx/getCurrentFxRates?tp=EU", 
+            { headers: { "Content-Type": "text/plain" } })
+
+        req.then(function(res) { console.log(res.body) })
+
+    </script>
+
+</body>
+</html>
