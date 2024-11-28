@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="money.js"></script>
+    <title>$/ft² ir €/m² skaičiuotuvas</title>
+
+    <style>
+        * {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: larger;
+            white-space: nowrap;
+        }
+
+        sup, sub {
+            font-size: medium;
+        }
+
+        body {
+            position: fixed;
+            display: inline-block;
+        }
+
+        label, input, p, a, button {
+            font-family: Cambria;
+            /* &.pvm  { margin-left: 0px; width: 70px; } */
+            /* &.unit { width: 50px; clear:left; float: right} */
+        }
+        input {
+            padding: 0;
+            padding-left: 4px;
+            outline-width: 1px;
+
+            position: fixed;
+            left: 120px;
+            width: 450px;
+            
+            /* width: 50vw; */
+            /* max-width: 450px; */
+/*  */
+            &[type="checkbox"] {
+                left: 70px;
+                width: unset;
+                transform: scale(2); transform-origin: 0 0%; 
+            }
+            &:focus { outline-style: solid; z-index: 2;} 
+            /* &#in-sq-ft, &#in-sq-m { margin-left: 187px }  /* I do in fact hate this, don't worrry. */      
+        }
+
+        .unit {
+            position: fixed;
+            left: 584px;
+        }
+    </style>
+</head>
+<body>
+    <a href="https://www.lb.lt/lt/kasdien-skelbiami-euro-ir-uzsienio-valiutu-santykiai-skelbia-europos-centrinis-bankas?class=Eu&type=day&selected_curr=USD">Lietuvos bankas EUR ↔ USD</a>
+    <br>
+    <label>PVM =</label> 
+    <input id="param-pvm" oninput="PVM = f64(this.value)"> <br>
+
+    <label>1 $ =</label>  
+    <input id="param-usd-eur" oninput="USD_EUR_EXR = f64(this.value)" style="font-style: italic"> 
+    <label class="unit">€</label> <br>
+
+    <label>1 ft² =</label> 
+    <input id="param-surface-ratio" oninput="SQ_FOOT_METER_COEF = f64(this.value)"> 
+    <label class="unit">m²</label> <br>
+
+    <!-- <iframe> -->
+    <br>
+
+    <label class="pvm">PVM:</label> 
+    <input type="checkbox" id="us-pvm" onclick="pvm_changed()">
+
+    <input id="in-usd"   oninput="usd_ft_to_eur_m()" autofocus> 
+    <label class="unit">$</label> <br>
+
+    <input id="in-sq-ft" oninput="usd_ft_to_eur_m()" value="1"> 
+    <label class="unit">ft²</label> <br>
+    
+    <b style="position: fixed; left: 340px">↕</b>
+    <br>
+
+    <label class="pvm">PVM:</label> 
+    <input type="checkbox" id="eu-pvm" onclick="pvm_changed()"> 
+
+    <input id="in-eur"  oninput="eur_m_to_usd_ft()"> 
+    <label class="unit">€</label> <br>
+
+    <input id="in-sq-m" oninput="eur_m_to_usd_ft()" value="1"> 
+    <label class="unit">m²</label> <br>
+    
+    <br>
+
+    <button id="redo-us-to-eu" onclick="usd_ft_to_eur_m()">Perskaičiuoti $⇾€</button>
+    <button id="redo-eu-to-us" onclick="eur_m_to_usd_ft()">Perskaičiuoti €⇾$</button>
+    <p id="errors" style="color: red"></p>
+    <br>
+    <p id="calculations"></p>
+
+    <script defer>
+        let SQ_FOOT_METER_COEF = 10.76387
+        let PVM = 1.21
+        let USD_EUR_EXR = -1
+        fetch("https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/eur.json")
+            .then(res => res.json())
+            .then(data => { USD_EUR_EXR = data.eur.usd; main() })
+            .catch(err => {
+                const e = by_id("param-usd-eur")
+                const prev = e.style.backgroundColor
+                e.style.backgroundColor = "red"
+                e.onfocus = function() { e.style.backgroundColor = prev; e.style.fontStyle = "normal"  }
+            })
+
+        const ERRORS = {
+            PVM_TOGGLED: { id: 1, m: "PVM buvo pakeistas, tačiau kaina nebuvo perskaičiuota" }
+        }
+        
+        function main() {
+            by_id("param-surface-ratio").value = SQ_FOOT_METER_COEF
+            by_id("param-pvm").value = PVM
+            by_id("param-usd-eur").value = USD_EUR_EXR
+        }
+
+        function usd_ft_to_eur_m() {
+            remove_error(ERRORS.PVM_TOGGLED)
+            let bool_usd_pvm = by_id("us-pvm").checked
+            let bool_eur_pvm = by_id("eu-pvm").checked
+
+            let f_pvm  = f64(by_id("param-pvm").value)
+            let f_usd  = f64(by_id("in-usd").value)
+            let f_sqft = f64(by_id("in-sq-ft").value)
+            let e_eur  = by_id("in-eur")
+            let e_sqm  = by_id("in-sq-m")
+
+            let f_sqm = (f_sqft * (1 / SQ_FOOT_METER_COEF)) 
+            let f_eur = f_usd * (1 / USD_EUR_EXR) 
+            e_eur.value = f_eur / f_sqm
+            e_sqm.value = 1
+
+            if(bool_usd_pvm) e_eur.value /= f_pvm
+            if(bool_eur_pvm) e_eur.value *= f_pvm
+
+            let e_log = by_id("calculations")
+            e_log.innerHTML = 
+           `Dolerių vertimas į eurus: <br>
+            1. ${f(f_eur)}€ = ${f(f_usd)}$ * (1 / ${f(USD_EUR_EXR)}) <br>
+            2. ${f(f_sqm)}m² = ${f(f_sqft)}ft² * (1 / ${f(SQ_FOOT_METER_COEF)}) <br>
+            3. <sup>${f(f_eur)}</sup>&frasl;<sub>${f(f_sqm)}</sub> = <sup>x</sup>&frasl;<sub>1</sub> = x <br>
+            4. kaina = ${f(f_eur / f_sqm)} <sup>€</sup>&frasl;<sub>m²</sub> <br>     
+            `
+            if(bool_usd_pvm && bool_eur_pvm) return
+
+            if(bool_usd_pvm) e_log.innerHTML += `5. ${f(e_eur.value)} = ${f(f_eur / f_sqm)} / ${f(f_pvm)} <br>`
+            if(bool_eur_pvm) e_log.innerHTML += `5. ${f(e_eur.value)} = ${f(f_eur / f_sqm)} * ${f(f_pvm)} <br>`
+        }
+
+        function eur_m_to_usd_ft() {
+            remove_error(ERRORS.PVM_TOGGLED)
+            let bool_usd_pvm = by_id("us-pvm").checked
+            let bool_eur_pvm = by_id("eu-pvm").checked
+
+            let f_pvm  = f64(by_id("param-pvm").value)
+            let e_usd  = by_id("in-usd")
+            let e_sqft = by_id("in-sq-ft")
+            let f_eur  = f64(by_id("in-eur").value)
+            let f_sqm  = f64(by_id("in-sq-m").value)
+
+            let f_sqft = f_sqm * SQ_FOOT_METER_COEF 
+            let f_usd = f_eur * USD_EUR_EXR 
+            e_usd.value = f_usd / f_sqft
+            e_sqft.value = 1
+
+            if(bool_usd_pvm) e_usd.value *= f_pvm
+            if(bool_eur_pvm) e_usd.value /= f_pvm
+
+            let e_log = by_id("calculations")
+            e_log.innerHTML = 
+           `Eurų vertimas į dolerius: <br>
+            1. ${f(f_usd)}$ = ${f(f_eur)}€ * ${f(USD_EUR_EXR)} <br>
+            2. ${f(f_sqm)}ft² = ${f(f_sqft)}m² * ${f(SQ_FOOT_METER_COEF)} <br>
+            3. <sup>${f(f_usd)}</sup>&frasl;<sub>${f(f_sqft)}</sub> = <sup>x</sup>&frasl;<sub>1</sub> = x <br>
+            4. kaina = ${f(f_usd / f_sqft)} <sup>$</sup>&frasl;<sub>ft²</sub> <br>  
+            `
+            if(bool_usd_pvm && bool_eur_pvm) return
+
+            if(bool_usd_pvm) e_log.innerHTML += `5. ${f(e_usd.value)} = ${f(f_usd / f_sqft)} * ${f(f_pvm)} <br>`
+            if(bool_eur_pvm) e_log.innerHTML += `5. ${f(e_usd.value)} = ${f(f_usd / f_sqft)} / ${f(f_pvm)} <br>`
+        }
+
+        function pvm_changed() {
+            assert(
+                by_id("in-usd").value   == "" && 
+                by_id("in-sq-ft").value == "" &&
+                by_id("in-eur").value   == "" &&
+                by_id("in-sq-m").value  == "", 
+                ERRORS.PVM_TOGGLED)
+        }
+
+        let errors = [] 
+        function assert(expr, error) {
+            if(errors.includes(error)) return
+            errors.push(error)
+            by_id("errors").innerText += error.m + '\n'
+        }
+
+        function remove_error(error) {
+            errors.splice(errors.indexOf(error), 1)
+            const err_elem = by_id("errors") 
+            err_elem.innerText = ""
+            for(e of errors) err_elem.innerText += e.m + '\n'
+        }
+
+        function f64(str) {
+            if(str === "") return 0
+            str = str.replace(',', '.')
+            return parseFloat(str, 10)
+        }
+
+        function f(f64) {
+            return parseFloat(f64, 10).toFixed(2)
+
+        }
+
+        function by_id(str) {
+            // assertf
+            return document.getElementById(str);
+        }
+
+    </script>
+</body>
+</html>
