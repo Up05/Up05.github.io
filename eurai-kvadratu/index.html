@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="money.js"></script>
     <title>$/ft² ir €/m² skaičiuotuvas</title>
 
     <style>
+        /* Maintainable and CSS... lol */
         * {
             font-family: 'Times New Roman', Times, serif;
             font-size: larger;
@@ -24,8 +24,6 @@
 
         label, input, p, a, button {
             font-family: Cambria;
-            /* &.pvm  { margin-left: 0px; width: 70px; } */
-            /* &.unit { width: 50px; clear:left; float: right} */
         }
         input {
             padding: 0;
@@ -36,16 +34,12 @@
             left: 120px;
             width: 450px;
             
-            /* width: 50vw; */
-            /* max-width: 450px; */
-/*  */
             &[type="checkbox"] {
-                left: 70px;
+                left: 75px;
                 width: unset;
                 transform: scale(2); transform-origin: 0 0%; 
             }
             &:focus { outline-style: solid; z-index: 2;} 
-            /* &#in-sq-ft, &#in-sq-m { margin-left: 187px }  /* I do in fact hate this, don't worrry. */      
         }
 
         .unit {
@@ -53,15 +47,17 @@
             left: 584px;
         }
 
-        #explanation {
+        #explanation, #example {
             position: fixed;
             left: 650px;
             top: 10px;
-            font-size: small; 
-            font-family: 'Times New Roman' 
+            font-size: medium; 
+            font-family: 'Times New Roman'
         }
-
-        li { }
+        #example { top: 200px; }
+        ol, #example>p { margin: 4px; }
+        div>b { font-size: larger; } 
+        
     </style>
 </head>
 <body>
@@ -70,9 +66,9 @@
     <label>PVM =</label> 
     <input id="param-pvm" oninput="PVM = f64(this.value)"> <br>
 
-    <label>1 $ =</label>  
+    <label>1 € =</label> 
     <input id="param-usd-eur" oninput="USD_EUR_EXR = f64(this.value)" style="font-style: italic"> 
-    <label class="unit">€</label> <br>
+    <label class="unit">$</label> <br>
 
     <label>1 ft² =</label> 
     <input id="param-surface-ratio" oninput="SQ_FOOT_METER_COEF = f64(this.value)"> 
@@ -108,20 +104,35 @@
     <p id="errors" style="color: red"></p>
     <br>
     <p id="calculations"></p>
-
-    <ol id="explanation">
-        Naudojimasis:
-        <li> Patikrinti parametrus, pvz.: dolerio kursą.</li>
-        <li> Įvesti kiek dolerių kainuoja kiek kvadratinių pėdų</li>
-        <li> Pažymėti ar kainai doleriais jau yra pritaikytas PVM</li>
-        <li> Pažymėti ar kainai eurais norima pritaikyti PVM</li>
-        <li> Galima paspausti perskaičiuoti (Jei PVM varnelė buvo uždėta gale)</li>
+    
+    <div id="explanation">
+    <b>Naudojimasis:</b>
+    <ol>
+        <li> Patikrinti parametrus, pvz.: dolerio kursą </li>
+        <li> Įvesti kiek dolerių kainuoja n kvadratinių pėdų </li>
+        <li> Pažymėti ar kainai doleriais jau yra pritaikytas PVM </li>
+        <li> Pažymėti ar kainai eurais norima pritaikyti PVM </li>
+        <li> Galima paspausti „perskaičiuoti“ (Jei PVM varnelė buvo uždėta pati paskutinė) </li>
     </ol>
-
-    <ol hidden id="pavyzdys">
-        Pavyzdys: (NEBAIGTA)
-
+    </div>
+    
+    <div id="example">
+    <b>Pavyzdys:</b>
+    <p>
+        Sakykim... 12 kvadratinių pėdų pelės kilimėlio kainuoja 6 dolerius (PVM jau pritaikytas). <br>
+        Man reikia suskaičiuoti kiek eurų kainuos 1 kvadratinis metras (PVM nemokėsiu). <br>
+        Taigi:
+    </p>
+    <ol>
+        <li> Įsitikinu, kad doleris vertas 1.056 tiek eurų </li>
+        <li> Į laukelį kurio dešinėje (vienetas) yra dolerių ženkliukas įvedu 6 </li>
+        <li> Į laukelį, kurio dešinėje yra „ft²“ (pedos kvadratu) įvedu 12  </li>
+        <li> Pažymiu varnelę prie pirmo PVM, nes tie 6 doleriai jau padauginti iš 1.21, be PVM ten būtų apie 5$ </li>
+        <li> Paspaudžiu „Perskaičiuoti $⇾€“ </li>
+        <li> Nukopijuoju kainą eurais. <br> 
+            Arba, jei noriu suskaičiuoti kokia būtų kaina 26-iems m², padauginu kainą eurais iš 26-ių. </li>
     </ol>
+    </div>
 
     <script defer>
         let SQ_FOOT_METER_COEF = 10.76387
@@ -129,7 +140,7 @@
         let USD_EUR_EXR = -1
         fetch("https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/eur.json")
             .then(res => res.json())
-            .then(data => { USD_EUR_EXR = data.usd.eur; main() })
+            .then(data => { USD_EUR_EXR = data.eur.usd; main() })
             .catch(err => {
                 const e = by_id("param-usd-eur")
                 const prev = e.style.backgroundColor
