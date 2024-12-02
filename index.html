@@ -1,84 +1,46 @@
 <!DOCTYPE html>
-<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <title>Document</title>
+    <title>Homepage</title>
+    <link rel="stylesheet" type="text/css" href="gruvbox.css">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script src="programs.js"></script>
+    <script src="main.js"></script>
 </head>
-<body style="display: inline-block">
-    <div id="values" style="display: block">
-        <h2>Reikšmės</h2>
-        <div> <label>1.</label> <input type="text" class="value"> </div>
-        <div> <label>2.</label> <input type="text" class="value"> </div>
-        <div> <label>3.</label> <input type="text" class="value"> </div>
-        <div> <label>4.</label> <input type="text" class="value"> </div>
-        <div> <label>5.</label> <input type="text" class="value"> </div>
-        <div> <label>6.</label> <input type="text" class="value"> </div>
-        <div> <label>7.</label> <input type="text" class="value"> </div>
-        <div> <label>8.</label> <input type="text" class="value"> </div>
-        <div> <label>9.</label> <input type="text" class="value"> </div>
-        <div> <label>10.</label> <input type="text" class="value"> </div>
-        <div> <label>11.</label> <button onclick="add_box(this.parentNode, 'value')">Pridėti</button> </div>
-    </div>
-    <div id="emails">
-        <h2>Elektroniniai paštai</h2>
-        <div> <label>1.</label> <input type="email" class="email"> </div>
-        <div> <label>2.</label> <input type="email" class="email"> </div>
-        <div> <label>3.</label> <input type="email" class="email"> </div>
-        <div> <label>4.</label> <button onclick="add_box(this.parentNode, 'email')">Pridėti</button> </div>
-    </div>
+<body>
 
-    <div>
-        <h2>Laiško siuntėjo duomenys</h2>
-        <form id="sender">
-            <div>
-            <label class="in_form">Vardas: </label>
-            <input type="text" placeholder="neatsakyti" value="Vaida" id="mail-sender">
-            </div>
-            <div>
-            <label class="in_form">Pavadinimas: </label>
-            <input type="text" placeholder="Gautas naujas pranešimas" value="Jūsų likimas" id="mail-title">
-            </div>
-            <div>
-            <label>Žinutės tekstas: </label>
-            <textarea rows="6" lang="lt" id="mail-text">
-Sveikas! pone vadove.
-Ištraukėt: {REIKŠMĖ}.
+    <pre class="terminal" id="t1" autofocus data-cwd="~"> </pre>
+    <pre class="terminal" id="t2" data-cwd="~"> </pre>
+    <pre id="bar">
 
-Geros dienos,
-Vaida</textarea>
-            </div>
-        </form>
-    </div>
+    <script defer>
+        term_register(by_id("t1"))
+        term_register(by_id("t2"))
 
-    <div id="log" style="visibility: hidden; display: none">
-        <h2>Problemos</h2>
-        <p id="errors"></p>
-        <p id="warnings"></p>
-    </div>
-
-    <div id="send">
-        <h2>Siųsti</h2>
-        <div> <label></label> <button onclick="assign_values(this)">Parinkti reikšmes</button> </div>
-        <div> <p id="res-log" onclick="toggle_res_log()">a@example.com gaus tekstą #1</p> </div>
-        <div> <label></label><button onclick="send_it(this)">Išsiųsti</button> </div>
-    </div>
-
-    <div id="config">
-        <h2>Nustatymai</h2>
-
-        <div> <label>Šrifto dydis (px)</label> 
-            <input value="16" onchange="set_font(this.value)" onload="set_font(this.value)"> </div>
-        <div> <label>Dėžučių aukščiai (px)</label> 
-            <input value="24" onchange="set_height(this.value)" onload="set_height(this.value)"></div>
-    </div>
-
-
-    <script defer src="main.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"> </script>
-    <script type="text/javascript">
-    (function(){ emailjs.init({ publicKey: "yaBAqxMJYtSpc3ZhI" }); })();
+        const term1 = by_id("t1")
+        const term2 = by_id("t2")
+        term1.lastChild.removeAttribute("contenteditable")
+        const borderColor = term1.style.borderColor
+        const filter = term1.style.filter
+        term1.style.borderColor = "var(--blue-dim)"
+        term1.style.filter = "brightness(100%)"
+        new Animation(400, 150)
+            .add_step(function() { term1.lastChild.innerText += "l" })
+            .add_step(function() { term1.lastChild.innerText += "s" })
+            .add_step(function() { })
+            .add_step(function() { term_exec(term1, term1.lastChild.innerText) })
+            .add_step(function() { term1.style.borderColor = borderColor; term1.style.filter = filter })
+            .add_step(function() { by_id("t2").lastChild.focus() })
+            .add_step(function() { term2.lastChild.innerText += "l" })
+            .add_step(function() { term2.lastChild.innerText += "a" })
+            .add_step(function() { term2.lastChild.innerText += "n" })
+            .add_step(function() { term2.lastChild.innerText += "g "})
+            .add_step(function() { term2.lastChild.innerText += "l" })
+            .add_step(function() { term2.lastChild.innerText += "t" })
+            .add_step(function() { term_exec(term2, term2.lastChild.innerText) })
+            .add_step(function() { term2.lastChild.innerText += "pa" })
+            .add_step(function() { term2.lastChild.innerText += "dė" })
+            .add_step(function() { term2.lastChild.innerText += "ti" })
+            .add_step(function() { term_exec(term2, term2.lastChild.innerText) })
+            .start()
     </script>
 </body>
-</html>

@@ -1,71 +1,64 @@
-:root {
-    --bg: #d6deeb;
-    --fg: #011627;
-    --border: #575656;
-}
-
 * {
-    color: var(--fg);
-
-    font-size: 16px;
+    font-family: Hack;
+    color: var(--purple);
 }
 
-h2 {
-    font-size: 24px;
-    text-transform: uppercase;
+body {
+    background-image: url("./wallpaper.webp");
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
+    display: grid;
+    height: 100vh;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr 24px;
+    gap: 10px;
 }
 
-label {
-    text-align: right;
-    display: inline-block;
-    width: 20px;
+.terminal {
+    background: var(--bg_t);
+    backdrop-filter: blur(15px) grayscale(25%);
+    border: 1px solid var(--bg_h);
+    border-radius: 10px;
+    padding: 4px;
+    text-wrap: wrap;
+    overflow-y: auto;
+    margin-top: 5px;
+    margin-bottom: 0;
+    filter: brightness(80%);
 }
 
-form, #config {
-    label {
-        width: 175px;
-    }
-    input, button, textarea {
-        width: 50vw;
-    }
+.terminal:focus-within {
+    border-color: var(--blue-dim);
+    filter: brightness(100%);
 }
 
-input, button, textarea {
-    width: 80vw;
-    padding-inline: 4px;
+span {
+    outline: none;
 }
 
-#errors {
-    color: red;
-    margin: 0px;
-    margin-left: 20px;
+#t1 {
+    grid-column: 1 / 1;
+    grid-row: 1 / span 2;
 }
 
-#warnings {
-    color: rgb(255, 193, 38);
-    margin: 0px;
-    margin-left: 20px;
-
+#t2 {
+    grid-column: 2 / 2;
+    grid-row: 1 / span 2;
 }
 
-#res-log {
-    margin-left: 20px;
-    padding-left: 4px;
-    border: 1px solid var(--fg);
-    border-radius: 4px;
-    background-color: var(--fg);
+#bar {
+    background: var(--bg_h);
+    grid-column: 1 / span 2;
+    grid-row: 3 / 3;
+    width: 100vw;
+    height: 26px;
+    margin: 0;
+    margin-left: -8px;
 }
 
-@media (pointer:none), (pointer:coarse) {
-    form, #config {
-        label {
-            margin-top: 4px;
-            width: 95%;
-            text-align: left;
-        }
-        input, button, textarea {
-            width: 95%;
-        }
-
-    }
+pre {
+    background: black;
 }
+
+

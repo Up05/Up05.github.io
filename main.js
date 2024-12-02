@@ -1,185 +1,61 @@
-/* TODO:
- - store settings and mails in local storage
+function by_id(id) { return document.getElementById(id) }
+function parent_term(base_elem) { let elem = base_elem; while(elem != null && elem.tagName != "PRE") { elem = elem.parentElement } return elem }
 
-Settings:
-    - font size
-    - text box height
-
-
-*/
-
-function by_id(id) {
-    return document.getElementById(id)
-}
-function by_class(name) {
-    return document.getElementsByClassName(name)    
+class Animation {
+    constructor(delay, step_duration) { this.delay = delay, this.step = step_duration; this.steps = [] }
+    add_step(func) { this.steps.push(func); return this }
+    start() { for(let i in this.steps) setTimeout(this.steps[i], this.delay + this.step * i) }
 }
 
-function add_box(parent, class_name) {
-    const parent_parent = parent.parentNode 
+function make_prompt_str(cwd) {
+    return `<span class="blue">${cwd}</span> <span class="purple">❯</span> <span contenteditable spellcheck="false" autofocus></span>`
+}
 
-    parent_parent.removeChild(parent)
-
-    const parent_div = document.createElement("div")
-    parent_div.innerHTML = `<label>${parent_parent.children.length}.</label> <input type="text" class="${class_name}"> `
-    parent_parent.appendChild(parent_div)
-
-    parent.children.item(0).innerText = parent_parent.children.length + '.'
-    parent_parent.appendChild(parent)
+function term_register(element) {
+    element.onkeydown = term_kb_handler
+    element.onmouseover = function() { element.lastChild.focus() }
+    element.onclick = function() { element.lastChild.focus() }
+    term_clear(element)
 }
 
 
-let mail_to_values = []
+function term_clear(term) {
+    term.innerHTML = ""
+    term.innerHTML += make_prompt_str(term.dataset.cwd)
+    term.lastChild.focus()
+}
 
-function assign_values(element) {
+function term_exec(term, str) {
+    const input = term.lastChild
+    term.removeChild(input)
+    term.innerHTML += input.innerText + "<br>"
+    term.innerHTML += exec_exec(term.dataset, str, term) + "<br>"
+    term.innerHTML += make_prompt_str(term.dataset.cwd)
+    if(str == "clear" || str == "valyti") term_clear(term) // great!.. 
+    term.lastChild.focus()
+}
 
-    const value_elems = document.getElementsByClassName("value")
-    const email_elems = document.getElementsByClassName("email")
 
-    const values = []
-    const emails = []
+function term_kb_handler(event) {
+    const key = event.key 
+    const elt = event.target
 
-    for(let i = 0; i < value_elems.length; i ++) {
-        const text = value_elems.item(i).value
-        if(text == undefined || text == null || text == "" || text == " ") continue;
-        values.push(text)
+    if(event.ctrlKey) {
+        switch(key) {
+        case "l":
+            term_clear(parent_term(elt))
+            event.preventDefault(true)
+        }
     }
 
-    for(let i = 0; i < email_elems.length; i ++) {
-        const text = email_elems.item(i).value
-        if(text == undefined || text == null || text == "" || text == " ") continue;
-        emails.push(text)
-    }
+    switch(key) {
+    case "Enter":
+        term_exec(parent_term(elt), elt.innerText)
+        event.preventDefault(true)
+        break;
 
-    console.log(values)
-    console.log(emails)
-
-    if(values.length < emails.length) { highlight(element); return }
-
-    const res_log_elem = document.getElementById("res-log")
-
-    res_log_elem.innerText = ""
-    mail_to_values.length = 0
-
-    for(email of emails) {
-        const i = Math.floor(Math.random() * values.length)
-        mail_to_values.push({k: email, v: values[i]})
-        res_log_elem.innerText += 
-            `${email} gaus reikšmę #${i+1}, t.y.: „${cap(values[i], 20)}“\n`
-        values.splice(i, 1)
-    }
-
-    console.log(mail_to_values)
-}
-
-function cap(str, max_len) {
-    if(str.length > max_len) {
-        str = str.substring(0, max_len - 3)
-        str += "..."
-    }
-    return str;
-}
-
-let res_log_hidden = true
-function toggle_res_log() {
-    const res_log_elem = document.getElementById("res-log")
-    if(res_log_hidden) {
-        res_log_elem.style.backgroundColor = "transparent"
-    } else {
-        res_log_elem.style.backgroundColor = document.body.getAttribute("--fg")
-    }
-    res_log_hidden = !res_log_hidden
-}
-
-function send_email(to, message) {
-    const params = {
-        to:    to,
-        from:  document.getElementById("mail-sender").value,
-        title: document.getElementById("mail-title").value,
-        text:  document.getElementById("mail-text").value.replace("{REIKŠMĖ}", message)
-    }
-    // console.log(params)
-    emailjs.send('gustosiunta', 'main', params)
-}
-
-function send_it(element){
-    if(mail_to_values.length == 0) { highlight(element); return }
-    if(by_id("mail-text").value == "") { highlight(element); return }
-
-    for(pair of mail_to_values) {
-        send_email(pair.k, pair.v)
-    }
-
-    highlight(element, "#0B5D1E", "#F1FAEE")
-    mail_to_values.length = 0
-}
-
-// assertions:
-
-function highlight(element, bg, fg) {
-    const prev_bg = element.style.backgroundColor
-    const prev_fg = element.style.color
-    if(bg == undefined) bg = "#E63946" 
-    if(fg == undefined) fg = "#F1FAEE"
-    element.style.backgroundColor = bg
-    element.style.color = fg
-    setTimeout(function() {
-        element.style.backgroundColor = prev_bg
-        element.style.color = prev_fg
-    }, 200)
-}
-
-function assert(expr, str, only_warn) {
-    if(expr) return
-    const id = only_warn ? "warnings" : "errors"
-    by_id(id).innerHTML += str + '<br>'
-}
-
-document.onchange = assertions
-document.onclick  = assertions
-function assertions(event) {
-    const warning_elem = document.getElementById("warnings")
-    const error_elem   = document.getElementById("errors")
-    warning_elem.innerText = ""
-    error_elem.innerText = ""
-
-    {
-        let v_count = 0, m_count = 0
-        const value_elems = by_class("value")
-        for(let i = 0; i < value_elems.length; i ++) 
-            if(value_elems.item(i).value != undefined && value_elems.item(i).value != "") v_count ++
-        const mail_elems = by_class("email")
-        for(let i = 0; i < mail_elems.length; i ++) 
-            if(mail_elems.item(i).value != undefined && mail_elems.item(i).value != "") m_count ++
-            
-        assert(v_count >= m_count, `Reikšmių yra mažiau nei pašto adresų, todėl keli adresatai gautų tą pačią reikšmę. Reikšmių skaičius = ${v_count}, pašto adresų skaičius = ${m_count}.`)
-    }
-
-    {
-        assert(by_id("mail-sender").value != "", "Laiško siuntėjo vardas yra tuščias.", true)
-        assert(by_id("mail-title").value != "", "Laiško pavadinimo laikelis yra tuščias.", true)
-        assert(by_id("mail-text").value != "", "Laiškas neturi jokio teksto (turinys yra tuščias)", false)
-        assert(by_id("mail-text").value.includes("{REIKŠMĖ}"), "Laiškas neturi laukelio {REIKŠMĖ}! Kiekvienas adrestas gaus tą patį laišką ir parinktos reikšmės bus ignoruojamos!", true)
 
     }
 
-    assert(mail_to_values.length > 0, "Dabartinės reikšmės nėra priskirtos adresatams! Paspauskite „Pasirinkti reikšmes“", true)
-
-
-    if(warning_elem.innerText != "" || error_elem.innerText != "") {
-        by_id("log").style.visibility = "visible"
-        by_id("log").style.display = "block"
-    } else {
-        by_id("log").style.visibility = "hidden"
-        by_id("log").style.display = "none"
-    }
-}
-assertions()
-
-function set_font(size) {
-    document.querySelectorAll("*").forEach(e => e.style.fontSize = `${size}px`)
 }
 
-function set_height(height) {
-    document.querySelectorAll("button, input").forEach(e => e.style.height = `${height}px`)
-}

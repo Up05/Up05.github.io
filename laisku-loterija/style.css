@@ -1,0 +1,71 @@
+:root {
+    --bg: #d6deeb;
+    --fg: #011627;
+    --border: #575656;
+}
+
+* {
+    color: var(--fg);
+
+    font-size: 16px;
+}
+
+h2 {
+    font-size: 24px;
+    text-transform: uppercase;
+}
+
+label {
+    text-align: right;
+    display: inline-block;
+    width: 20px;
+}
+
+form, #config {
+    label {
+        width: 175px;
+    }
+    input, button, textarea {
+        width: 50vw;
+    }
+}
+
+input, button, textarea {
+    width: 80vw;
+    padding-inline: 4px;
+}
+
+#errors {
+    color: red;
+    margin: 0px;
+    margin-left: 20px;
+}
+
+#warnings {
+    color: rgb(255, 193, 38);
+    margin: 0px;
+    margin-left: 20px;
+
+}
+
+#res-log {
+    margin-left: 20px;
+    padding-left: 4px;
+    border: 1px solid var(--fg);
+    border-radius: 4px;
+    background-color: var(--fg);
+}
+
+@media (pointer:none), (pointer:coarse) {
+    form, #config {
+        label {
+            margin-top: 4px;
+            width: 95%;
+            text-align: left;
+        }
+        input, button, textarea {
+            width: 95%;
+        }
+
+    }
+}
