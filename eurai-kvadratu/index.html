@@ -181,7 +181,7 @@
             e_log.innerHTML = 
            `Dolerių vertimas į eurus: <br>
             1. ${f(f_eur)}€ = ${f(f_usd)}$ * (1 / ${f(USD_EUR_EXR)}) <br>
-            2. ${f(f_sqm)}m² = ${f(f_sqft)}ft² * (1 / ${f(SQ_FOOT_METER_COEF)}) <br>
+            2. <b>${f(f_sqm)}m² = ${f(f_sqft)}ft² * (1 / ${f(SQ_FOOT_METER_COEF)})</b> <br>
             3. <sup>${f(f_eur)}</sup>&frasl;<sub>${f(f_sqm)}</sub> = <sup>x</sup>&frasl;<sub>1</sub> = x <br>
             4. kaina = ${f(f_eur / f_sqm)} <sup>€</sup>&frasl;<sub>m²</sub> <br>     
             `
@@ -214,7 +214,7 @@
             e_log.innerHTML = 
            `Eurų vertimas į dolerius: <br>
             1. ${f(f_usd)}$ = ${f(f_eur)}€ * ${f(USD_EUR_EXR)} <br>
-            2. ${f(f_sqm)}ft² = ${f(f_sqft)}m² * ${f(SQ_FOOT_METER_COEF)} <br>
+            2. <b>${f(f_sqm)}ft² = ${f(f_sqft)}m² * ${f(SQ_FOOT_METER_COEF)}</b> <br>
             3. <sup>${f(f_usd)}</sup>&frasl;<sub>${f(f_sqft)}</sub> = <sup>x</sup>&frasl;<sub>1</sub> = x <br>
             4. kaina = ${f(f_usd / f_sqft)} <sup>$</sup>&frasl;<sub>ft²</sub> <br>  
             `
@@ -254,7 +254,7 @@
         }
 
         function f(f64) {
-            return parseFloat(f64, 10).toFixed(2)
+            return parseFloat(f64, 10)
 
         }
 
