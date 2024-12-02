@@ -1,7 +1,7 @@
 let lang = "en" // | "lt"
 function localize(en, lt, color) { let txt = lang == "en" ? en : lt; return color != undefined ? `<span class="${color}">${txt}</span>` : txt }
 
-const HERE = document.location.href.substring(0, document.location.href.length - "/index.html".length)
+const HERE = document.location.href
 const GITHUB =  "https://github.com/up05/"
 const HOME = {//{{{
     "web": {
