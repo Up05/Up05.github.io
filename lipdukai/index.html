@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Lipdukai.lt</title>
+    
+    <script>
+        /*  L E V E N S H T E I N   D I S T A N C E   L I B R A R Y
+            from: https://github.com/gustf/js-levenshtein
+        */
+
+        'use strict';
+        function _min(d0, d1, d2, bx, ay) {
+            return d0 < d1 || d2 < d1
+                ? d0 > d2
+                ? d2 + 1
+                : d0 + 1
+                : bx === ay
+                ? d1
+                : d1 + 1;
+        }
+
+        function levenshtein(a, b) {
+            if (a === b) {
+                return 0;
+            }
+
+            if (a.length > b.length) {
+                var tmp = a;
+                a = b;
+                b = tmp;
+            }
+
+            var la = a.length;
+            var lb = b.length;
+
+            while (la > 0 && (a.charCodeAt(la - 1) === b.charCodeAt(lb - 1))) {
+                la--;
+                lb--;
+            }
+
+            var offset = 0;
+
+            while (offset < la && (a.charCodeAt(offset) === b.charCodeAt(offset))) {
+                offset++;
+            }
+
+            la -= offset;
+            lb -= offset;
+
+            if (la === 0 || lb < 3) {
+                return lb;
+            }
+
+            var x = 0;
+            var y; var d0; var d1; var d2; var d3; var dd; var dy; var ay; 
+            var bx0; var bx1; var bx2; var bx3;
+
+            var vector = [];
+
+            for (y = 0; y < la; y++) {
+                vector.push(y + 1);
+                vector.push(a.charCodeAt(offset + y));
+            }
+
+            var len = vector.length - 1;
+
+            for (; x < lb - 3;) {
+                bx0 = b.charCodeAt(offset + (d0 = x));
+                bx1 = b.charCodeAt(offset + (d1 = x + 1));
+                bx2 = b.charCodeAt(offset + (d2 = x + 2));
+                bx3 = b.charCodeAt(offset + (d3 = x + 3));
+                dd = (x += 4);
+                for (y = 0; y < len; y += 2) {
+                    dy = vector[y];
+                    ay = vector[y + 1];
+                    d0 = _min(dy, d0, d1, bx0, ay);
+                    d1 = _min(d0, d1, d2, bx1, ay);
+                    d2 = _min(d1, d2, d3, bx2, ay);
+                    dd = _min(d2, d3, dd, bx3, ay);
+                    vector[y] = dd;
+                    d3 = d2;
+                    d2 = d1;
+                    d1 = d0;
+                    d0 = dy;
+                }
+            }
+
+            for (; x < lb;) {
+                bx0 = b.charCodeAt(offset + (d0 = x));
+                dd = ++x;
+                for (y = 0; y < len; y += 2) {
+                    dy = vector[y];
+                    vector[y] = dd = _min(dy, d0, dd, bx0, vector[y + 1]);
+                    d0 = dy;
+                }
+            }
+
+            return dd;
+        }
+    </script>
+
+    <style>
+        * { overflow: hidden; }
+
+        :root {
+            --bg1: #563A9C;
+            --bg2: #8B5DFF;
+            --bg3: #6A42C2;
+            --fg1: #3895C3;
+            --fg2: #FFF7D1;
+
+            background: var(--bg1);
+            font-size: larger;
+            overflow: none;
+        }
+        button, input, select {
+            background: var(--bg1);
+            color: var(--fg2);
+            border: var(--bg2) 1px inset;
+        }
+
+        button:hover, input:hover, select:hover {
+            filter: saturate(140%) brightness(120%);
+        }
+        
+        body>* {
+            display: grid;
+            color: var(--fg2);
+
+        }
+        script, style {
+            display: none;
+
+        }
+
+        body {
+            margin: 0 0;
+            width: 100vw;
+            height: 100vh;
+            display: grid;
+            grid-template-columns: 20% 80%;
+            grid-template-rows: max(4rem, 10%) 90%;
+            overflow: none;
+        }
+
+        @keyframes run-away {
+            from { transform: scale(1) translate(0px, 0px)     rotate(0deg)   ; }
+            to   { transform: scale(0) translate(200px, 100px) rotate(720deg) ; }
+        }
+
+
+        #header {
+            background: var(--bg2);
+            grid-template-columns: 1fr 3fr 1fr;
+            grid-row: 1;
+            grid-column: span 2;  
+            align-items: center;
+            justify-items: center;
+
+            #the-title {
+                margin-left: 3%;
+                font-size: 280%;
+                grid-column: 1;
+            }
+
+            input {
+                font-size: larger;
+                border-radius: 30px;
+                width: 50%;
+                height: 60%;
+                padding-left: 20px;
+                grid-column: 2;
+            }
+
+            button {
+                grid-column: 3;
+                font-size: larger;
+                min-width: 55%;
+                width: fit-content;
+                height: 60%;
+                
+
+            }
+        }
+        
+        #filter {
+            background: var(--bg3);
+            grid-row: 2;
+            grid-column: 1;
+            overflow-y: auto;
+            display: flex;
+            align-items: baseline;
+            flex-direction: column;
+            padding: 0 5%;
+            
+            * {
+                width: 100%;
+            
+            }
+
+            .section {
+                text-align: center;
+            }
+
+            .row {
+                display: inline-block;
+                * {
+                    display: inline;
+                    width: fit-content;
+                }
+                div input { margin-left: 30%; max-width: 60%; }
+                div label { margin-left: -50%; margin-top: 0.35rem; padding-left: 2px; padding-right: 2px; font-size: 0.75rem; background: var(--bg1) }
+    
+                :last-child {
+                    float: right;
+                }
+            }   
+            
+            .sorting-stuff {
+                button {
+                    float: right;
+                    height: 1.05rem;
+                }
+            }
+
+            .selectables {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: baseline;
+
+                .selectable {
+                    display: inline;
+                    width: fit-content;
+                    margin-right: 4px;
+                    padding-inline: 3px;
+                    margin-bottom: 2px;
+                    font-weight: 500;
+                }
+
+                .selected {
+                    background: #421E77;
+                    color: #55FF88;
+                }
+            }
+            
+            .on-top {
+                display: grid;
+                * { grid-column: 1; grid-row: 1; }
+            }
+
+        }
+
+        @keyframes rotating {
+            from { transform: rotate(3deg) skewX(-4deg) scale(0.9) rotate3d(0, 1, 0, 0deg); }
+            25%  { transform: rotate(3deg) skewX(-4deg) scale(0.9) rotate3d(0, 1, 0, 90deg);  filter: none; }
+            26%  { transform: rotate(3deg) skewX(-4deg) scale(0.9) rotate3d(0, 1, 0, 91deg);  filter: brightness(0) saturate(100%) invert(90%) sepia(99%) saturate(158%) hue-rotate(167deg) brightness(99%) contrast(89%); }
+            75%  { transform: rotate(3deg) skewX(-4deg) scale(0.9) rotate3d(0, 1, 0, 270deg); filter: brightness(0) saturate(100%) invert(90%) sepia(99%) saturate(158%) hue-rotate(167deg) brightness(99%) contrast(89%); }
+            76%  { transform: rotate(3deg) skewX(-4deg) scale(0.9) rotate3d(0, 1, 0, 271deg); filter: none; }
+            to   { transform: rotate(3deg) skewX(-4deg) scale(0.9) rotate3d(0, 1, 0, 360deg); }
+        }
+
+        #main {
+            width: 100%;
+            overflow-y: auto;
+            display: inline-grid;
+            gap: 10px;
+            /* grid-template-columns: minmax(200px, 1fr) minmax(200px, 1fr) minmax(200px, 1fr) minmax(200px, 1fr) minmax(200px, 1fr); */
+            grid-template-columns: repeat(auto-fill, min(256px));
+            grid-auto-rows: 1fr;
+            justify-content: center;
+            padding: 1% 0;
+
+            .sticker {
+                border: var(--fg1) 2px inset;
+                width: fit-content;
+                height: fit-content;
+                overflow: clip;
+
+                img {
+                    transform: rotate(3deg) skewX(-4deg) scale(0.9);
+                    border: black 1px outset;
+                    border-radius: 33%;
+                    cursor: pointer;
+                    color: black;
+                }
+
+                img:after {
+                    content: '';
+                    background: linear-gradient(to right, black, transparent);
+                    -webkit-transform: rotateY( 180deg );
+                    -webkit-transform-style: preserve-3d;
+                    -webkit-backface-visibility: hidden;
+                }
+
+
+                p:first-of-type { font-size: x-large; }
+                p {
+                    border-top: inherit;
+                    border-top-style: dotted;
+                    margin: 0;
+                    text-align: center;
+
+                }
+
+                span:first-of-type { border-right: inherit; }
+                span {
+                    border-top: inherit;
+                    width: calc(50% - 1px);
+                    float: left; 
+                    text-align: center;
+                }
+            }
+            .sticker:hover img {
+                animation: rotating 2s ease-out infinite;
+            }
+
+
+        }
+
+        .tab {
+            margin-left: 8px;
+        }
+
+        .vline {
+            border-left: black 2px solid;
+        }
+
+    </style>
+
+</head>
+<body>
+        
+    <script>
+        let sort_hilo = false // the sorting direction of the main content (highest to lowest)
+    </script>
+
+    <div id=header >
+        <span  id=the-title > Lipdukai.lt </span>
+        <input placeholder=Paieška id=search oninput="update_list()" > </input>
+        <button onclick="this.style.animation = 'run-away 1.5s ease-out forwards'"> 🛒 <span class=tab /> Krepšelis </button>
+    </div>  
+    
+    <div id=filter >
+        <p class=section > Rušiavimas </p>
+        <div class="row sorting-stuff" >
+        <label> Pagal: </label>
+        <button onclick="sort_hilo = this.innerText == '⮟'; this.innerText = ( this.innerText == '⮝' ) ? '⮟' : '⮝'">⮟</button>
+        <select name=sort id=sort > 
+            <option value="sales" > Pardavimus </option>
+            <option value="price">  Kainą </option>
+            <option value="count" > Kiekį </option>
+        </select>
+        </div>
+
+        <p class=section > Kaina </p>
+        <div class=row > <label> Nuo: </label> <div> <input id=price-lo value=0 oninput="update_list()" /> <label> € </label> </div> </div>
+        <div class=row > <label> Iki: </label> <div> <input id=price-hi value=100 oninput="update_list()" /> <label> € </label> </div> </div>
+
+        <p class=section > Kategorijos </p>
+        <div class=selectables id=categories >
+            <button class=selectable > Procesoriai </button>
+            <button class=selectable > Vaizdo plokštės </button>
+            <button class=selectable > Linux </button>
+            <button class=selectable > Vim </button>
+            <button class=selectable > Windows </button>
+            <button class=selectable > Apple </button>
+            <button class=selectable > Naršyklės </button>
+            <button class=selectable > Krepšinis </button>
+            <button class=selectable > Futbolas </button>
+            <button class=selectable > Kortų žaidimai </button>
+            <button class=selectable > Kompiuteriniai žaidimai </button>
+            <button class=selectable > Istorija </button>
+        </div>
+
+        <p class=section > Stiliai </p>
+        <div class=selectables id=styles >
+            <button class=selectable > Minimalizmas </button>
+            <button class=selectable > Impresionizmas </button>
+            <button class=selectable > 2D </button>
+            <button class=selectable > 3D </button>
+            <button class=selectable > Portretas </button>
+            <button class=selectable > Su tekstu </button>
+            <button class=selectable > Gruvbox </button>
+            <button class=selectable > Catpuccin </button>
+            <button class=selectable > Juoda balta </button>
+            <button class=selectable > Pastelė </button>
+        </div>
+
+    </div>
+
+    <div id=main >
+        <div class=sticker >
+            <img alt="Test" src="data/vim.png"/>
+            <p> Vim </p>
+            <span> 2.50 € </span>
+            <span> 90 vnt. </span>
+        </div>
+    </div>
+
+    <script>
+        // Oops, forgot to make this properly cased
+        const CATEGORIES = {
+            CPU:        "Procesoriai",
+            GPU:        "Vaizdo plokštės",
+            Linux:      "Linux",
+            Vim:        "Vim",
+            Windows:    "Windows",
+            Apple:      "Apple",
+            Browser:    "Naršyklės",
+            Basketball: "Krepšinis",
+            Football:   "Futbolas",
+            Cards:      "Kortų žaidimai",
+            Gaming:     "Kompiuteriniai žaidimai",
+            History:    "Istorija"
+        }
+        
+        const STYLES = {
+            Minimalism:     "Minimalizmas",
+            Impressionism:  "Impresionizmas",
+            "2D":           "2D", 
+            "3D":           "3D",
+            Portret:        "Portretas",
+            Text:           "Su tekstu",
+            Gruvbox:        "Gruvbox",
+            Catpuccin:      "Catpuccin",
+            BlackAndWhite:  "Juoda balta",
+            Pastel:         "Pastelė"
+        }
+
+        const products = {
+            intel1: {  // {{{
+                categories: [ "CPU" ],
+                styles: [ "2D", "Text", "Minimalism", "Pastel" ],
+                price: 2.5,
+                count: 55,
+            },
+            intel2: {
+                categories: [ "CPU" ],
+                styles: [ "2D", "Text", "Minimalism" ],
+                price: 0.5,
+                count: 15,
+            },
+            amd1: {
+                categories: [ "CPU", "GPU" ],
+                styles: [ "2D", "Text", "Minimalism" ],
+                price: 1.5,
+                count: 35,
+            },
+            amd2: {
+                categories: [ "CPU", "GPU" ],
+                styles: [ "2D", "Text", "Minimalism" ],
+                price: 1,
+                count: 20,
+            },
+            nvidia1: {
+                categories: [ "GPU" ],
+                styles: [ "3D", "Text", "Portret" ],
+                price: 5,
+                count: 85,
+            }, // }}}
+            linux0: { // {{{
+                categories: [ "Linux" ],
+                styles: [ "Minimalism", "2D", "Portret" ],
+                price: 1.5,
+                count: 80
+            },
+            linux1: {
+                categories: [ "Linux" ],
+                styles: [ "Minimalism", "2D" ],
+                price: 3.5,
+                count: 60
+            },
+            linux2: {
+                categories: [ "Linux" ],
+                styles: [ "Minimalism", "2D" ],
+                price: 5.0,
+                count: 20
+            },
+            linux3: {
+                categories: [ "Linux" ],
+                styles: [ "Impressionism", "2D" ],
+                price: 4.5,
+                count: 30
+            },
+            linux4: {
+                categories: [ "Linux" ],
+                styles: [ "Minimalism", "2D" ],
+                price: 2.5,
+                count: 40
+            },
+            linux5: {
+                categories: [ "Linux" ],
+                styles: [ "Impressionism", "2D", "Text" ],
+                price: 5.5,
+                count: 15
+            },
+            linux6: {
+                categories: [ "Linux" ],
+                styles: [ "Minimalism", "2D" ],
+                price: 2.5,
+                count: 60
+            }, // }}}}
+            // TODO: Vim
+            windows1: { // {{{
+                categories: [ "Windows" ],
+                styles: [ "Minimalism", "2D" ],
+                price: -2.5,
+                count: 10
+            },
+            windows2: {
+                categories: [ "Windows" ],
+                styles: [ "Impressionism", "2D", "Text" ],
+                price: 6,
+                count: 40
+            },
+            apple1: {
+                categories: [ "Apple" ],
+                styles: [ "Impressionism", "2D" ],
+                price: 4,
+                count: 35
+            },
+            browser1: {
+                categories: [ "Browser" ],
+                styles: [ "Impressionism", "2D", "Text" ],
+                price: 3,
+                count: 20
+            },
+            browser2: {
+                categories: [ "Browser" ],
+                styles: [ "Minimalism", "2D" ],
+                price: 2,
+                count: 10
+            },
+            browser3: {
+                categories: [ "Browser" ],
+                styles: [ "Minimalism", "2D" ],
+                price: 4,
+                count: 10
+            }, // }}}
+            basketball1: { // {{{ 
+                categories: [ "Basketball" ],
+                styles: [ "Impressionism", "2D" ],
+                price: 7.5,
+                count: 20
+            },
+            basketball2: { 
+                categories: [ "Basketball" ],
+                styles: [ "Minimalism", "2D", "Text" ],
+                price: 4.5,
+                count: 15
+            },
+            basketball3: { 
+                categories: [ "Basketball" ],
+                styles: [ "Minimalism", "2D" ],
+                price: 3,
+                count: 25
+            },
+            cards1: { 
+                categories: [ "Cards" ],
+                styles: [ "Minimalism", "2D" ],
+                price: 2,
+                count: 25
+            },
+            cards2: { 
+                categories: [ "Cards" ],
+                styles: [ "Minimalism", "2D" ],
+                price: 2,
+                count: 25
+            },
+            cards3: { 
+                categories: [ "Cards" ],
+                styles: [ "Minimalism", "2D" ],
+                price: 2,
+                count: 25
+            },
+            cards4: { 
+                categories: [ "Cards" ],
+                styles: [ "Minimalism", "2D" ],
+                price: 2,
+                count: 25
+            },
+            cards5: { 
+                categories: [ "Cards" ],
+                styles: [ "Minimalism", "3D" ],
+                price: 3.5,
+                count: 25
+            },
+            cards6: { 
+                categories: [ "Cards" ],
+                styles: [ "Impressionism", "3D", "Portret" ],
+                price: 6,
+                count: 45
+            }, // }}}
+            gaming1: { // {{{ 
+                categories: [ "Gaming" ],
+                styles: [ "Impressionism", "2D" ],
+                price: 7.5,
+                count: 40
+            },
+            gaming2: { 
+                categories: [ "Gaming" ],
+                styles: [ "Impressionism", "3D" ],
+                price: 7.5,
+                count: 40
+            },
+            gaming3: { 
+                categories: [ "Gaming" ],
+                styles: [ "Impressionism", "2D" ],
+                price: 7.5,
+                count: 40
+            },
+            history1: { 
+                categories: [ "History" ],
+                styles: [ "Impressionism", "2D", "BlackAndWhite" ],
+                price: 7.5,
+                count: 40
+            }, // }}}
+        }
+
+    </script>
+
+    <script defer>
+        function by_id(id) { return document.getElementById(id) }
+
+        const header = by_id("header")
+        const filter = by_id("filter")
+        const main   = by_id("main")
+
+        function heuristic_name_of(str) {
+            const last = str.charAt(str.length - 1)
+            if(last >= '0' && last <= '9') return `${ str.charAt(0).toUpperCase() }${ str.substring(1, str.length - 1) } ${ last }`
+            return str
+        }
+
+        // for(const k in products) {
+        //     main.innerHTML += `
+        // <div class=sticker >
+        //     <img alt="${k}.png" src="data/${k}.png"/>
+        //     <p> ${heuristic_name_of(k)} </p>
+        //     <span> ${products[k].price} € </span>
+        //     <span> ${products[k].count} vnt. </span>
+        // </div> `
+        // }
+
+        update_list()
+
+        document.onclick = function(event) {
+            if(event.target.className == "selectable") {
+                event.target.classList.add("selected")
+            } else if(event.target.className.includes("selectable")) {
+                event.target.classList.remove("selected")
+                // Possible optimization here.
+            }
+            update_list()
+        }
+        
+        // This is very slow code.
+        // It creates all new objects constantly.
+        // In this language, this should not be done.
+
+        function get_selected(children) {
+            let output = []
+            for(let i = 0; i < children.length; i ++) {
+                if(children.item(i).classList.contains("selected"))
+                    output.push(children.item(i).innerText)
+            }
+            return output
+        }
+
+        function update_list() {
+            const sorting = by_id("sort").value
+            const categories = get_selected(by_id("categories").children)
+            const styles = get_selected(by_id("styles").children)
+            const price_min = by_id("price-lo").value
+            let   price_max = by_id("price-hi").value
+            if(price_max == 0) price_max = 100000000
+            const search = by_id("search").value
+
+            let unsorted_list = []
+
+            for(const k in products) {
+                v = products[k]
+                let name = heuristic_name_of(k)
+
+                if(v.price < price_min || v.price > price_max) continue
+                if(categories.length > 0) if(!categories.some( c1 => v.categories.some( c2 => CATEGORIES[c2] == c1 ) )) continue
+                if(styles.length > 0)     if(!styles.some( s1 => v.styles.some( s2 => STYLES[s2] == s1 ) )) continue
+
+                let criteria = 0
+                if(sorting == "price") criteria = v.price
+                if(sorting == "count") criteria = v.count
+
+                unsorted_list.push({ criteria: criteria, name: name, data: `
+            <div class=sticker >
+                <img alt="${k}.png" src="data/${k}.png"/>
+                <p> ${name} </p>
+                <span> ${v.price} € </span>
+                <span> ${v.count} vnt. </span>
+            </div>` })
+            }
+
+            main.replaceChildren()
+            
+            const list = unsorted_list.sort((a, b) => {
+                const d1 = search && a ? levenshtein(search, a.name) : 0
+                const d2 = search && b ? levenshtein(search, b.name) : 0
+                if(d1 == d2) return sort_hilo ? a.criteria > b.criteria : a.criteria < b.criteria
+                return d1 > d2
+            })
+            for(const item of list) main.innerHTML += item.data
+        }
+
+
+    </script>
+</body>
+</html>
