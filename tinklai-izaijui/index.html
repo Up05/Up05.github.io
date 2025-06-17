@@ -2,6 +2,10 @@
 <html>
 <head>
     <style>
+        code {
+            font-family: "Courier New";
+        }
+
         div {
             padding-top: 1em;
             border-bottom: 1px black dashed;
@@ -142,6 +146,13 @@ ARP paketai yra perduodami transliaciniu būdu.
 Bet kuris kompiuteris gali pasakyti(perduoti savo MAC), kad jo IP adresas yra toks, kurio nori ARP paketo siuntėjas, 
 nors jo IP iš tikro yra kitoks ir kreipiamasi iš vis ne į tą kompiuterį.
         </p>
+        <p class=a>
+Aš parašiau teisingai.
+ARP užnuodijimas yra „klaidingas“ vertimas tarp IP ir MAC. Bet kuris įrenginys tinkle gali atsakyti į ARP kreipimus
+
+Citata: <code> For example, if Computer A “asks” for the MAC address of Computer B, an attacker at Computer C can respond and Computer A would accept this response as authentic. </code>
+        </p>
+        <a href="https://www.varonis.com/blog/arp-poisoning"> „ARP Poisoning“ tinklaraštis </a>
     </div>
 
 
@@ -153,6 +164,11 @@ Kitų:
 Padaro transliacinę užklausą visam tinkle, paklause visų to tiklo kompiuterių, kad, 
 jei jų IP adresas yra toks ir toks, jie tegul atsiunčia savo MAC adresą.
         </p>
+
+        <p class=a>
+Kompiuteris-1 padaro ARP užklausą visam tinklui, kitas kompiuteris su teisingu IP adresu nusiunčia savo MAC kompiuteriui-1.
+        </p>
+        <a href="https://network-guides.com/arp-mapping-ip-addresses-to-mac-addresses/">Svarbu: skyrius „IP Address to MAC Address Translation“</a> 
     </div>
 
 
@@ -163,6 +179,19 @@ jei jų IP adresas yra toks ir toks, jie tegul atsiunčia savo MAC adresą.
 Netiesiogiai. Pirmiausia IP paketas turi nukeliauti iš siuntėjo vietinio tinklo į gavėjo ir 
 tik tada galima daryti transliacinio adreso užklausą arba nurodyti MAC paketo headeryje.
         </p>
+        <p class=a>
+Man atrodo, atsakiau teisingai.
+
+Tipo, MAC gali būti naudojamas tik LAN. Taigi, paketas su MAC pasiekia routerį ir tada tam paketui priskiria IP adresą, su IP adresa numaršrutizuojamas į kitą routerį, ir į kitą LAN.
+Tada tame antrame LAN jau vėl naudojamas MAC iki kol pasiekia hostą...
+<code>
+ _________                                                                                                                               _________ 
+|         |       _________________          _______          _______________________          _______          _________________       |         |  
+|         |      |       | p a k e |       /         \       |     |       | p a k e |       /         \       |       | p a k e |      |         |
+`----+----' ===> | M A C | t a s...| ===> | routeris  | ===> | I P | M A C | t a s...| ===> | routeris  | ===> | M A C | t a s...| ===> `----+----'
+     |           |_______|_________|       \ _______ /       |_____|_______|_________|       \ _______ /       |_______|_________|           |            
+    -=-                                                                                                                                     -=-    
+</code> </p>
     </div>
 
 
@@ -173,6 +202,13 @@ tik tada galima daryti transliacinio adreso užklausą arba nurodyti MAC paketo 
 Tinklo adresas yra 0-inis. Pagal kaukę, hostų adreso dalis turi būti nulis.
 Transliacinis toks pats kaip tinklo, bet hostų adreso dalis turi būti pilna vienetukų (dvejetainėje skaičiavimo sistemoje).
 Galimi IP adresai yra visi kurie liko, hostų dalį yra ir nuliukų, ir vienetukų.
+        </p>
+
+        <p class=a>
+Man atrodo, atsakiau gerai. <a href="https://superuser.com/a/379474">Čia kalba daugiau apie tinklo adresą</a>, 
+tipo, kad anksčiau kreipimas veikdavo kaip broadcastas, dabar jau nebėra labai svarbu, nors senesnės programos dar vis gali atsikratyti paketų...
+
+Be to, aš čia varau per dvejetainę skaičiavimo sistemą: <code>11111111</code>, o ne dešimtainę: <code>255</code>, nes potinkliai atsikrato gražaus: 255
         </p>
     </div>
 
