@@ -220,6 +220,26 @@ Be to, aš čia varau per dvejetainę skaičiavimo sistemą: <code>11111111</cod
 Liko 14 galimų hostų
 ...
         </p>
+        <p class=a>
+Čia reikia <a href=https://www.rapidtables.com/convert/number/decimal-to-binary.html?x=240>paversti 240 į dvejetainę sistemą</a>, gauni: <code>11110000</code>
+Tada, kad gautum hostų skaičių:
+1. suskaičiuoji kiek yra nuliukų (yra 4)
+2. naudoji formulę: <code> hostai = 2<sup>nuliukai</sup> - 2 </code>
+3. <code> 2<sup>4</sup> - 2 = 16 - 2 = 14 </code>
+
+Kaip versti dešimtainius skaičius (mažesnius už 256) į dvejetainius: (dar nesu šito paaiškinęs suprantamai... sėkmės!)
+1. Prisimink skaičių 128 (čia yra 2<sup>7</sup>)
+2. Jei skaičius yra daugiau arba lygus 128, prirašyk prie atsakymo 1 ir atimk 128 iš dabartinio skaičiaus
+<code>  240 &ge; 128, taigi ats.: 1??? ????, 240 - 128 = 112 </code>
+3. Padalink 128 per pus. Kartok antrą žingsnį.
+<code>  112 &ge; 64,  taigi ats.: 11?? ????, 112 - 64 = 48 </code> 
+4. Kartok trečią žingsnį.
+<code>  48 &ge; 32, taigi ats.: 111? ????, 48 - 32 = 16 </code>
+5. ...
+<code>  16 &ge; 16, taigi ats.: 1111 ????, 16 - 16 = 0 </code>
+6. Jei lieka nulis, toliaus bus tik nuliukai.
+<code>  ats.: 1111 0000 </code>
+        </p>
     </div>
 
 
@@ -229,6 +249,10 @@ Liko 14 galimų hostų
         <p> 
 Transliacines užklausas reikia nusiųsti į mažiau kompiuterių 
         </p>
+        <p class=a>
+Atsakiau teisingai
+        </p>
+        <a href="https://www.networkcomputing.com/ip-subnetting/5-subnetting-benefits"> Pirmas punktas </a> 
     </div>
 
 
@@ -237,6 +261,9 @@ Transliacines užklausas reikia nusiųsti į mažiau kompiuterių
         <i> Kas yra VLAN ir kokias problemas jis padeda išspręsti? </i>
         <p> 
 Virtualus vietinis tinklas. Atskiria tinklą. Vėl, transliacines užklausos siuntinėti yra mažiau darbo.  Segmentavimas vistiek atneša ir biški saugumo. 
+        </p>
+        <p class=a>
+Čia irgi teisingai, dėl saugumo buvo ir tas Cisco pavyzdys su banku, ir ARP užnuodijimas.
         </p>
     </div>
 
@@ -247,6 +274,11 @@ Virtualus vietinis tinklas. Atskiria tinklą. Vėl, transliacines užklausos siu
         <p> 
 VLAN per komutatorius, LAN per maršrutizatorių
         </p>
+        <p class=a>
+LAN yra tiesiog įrenginiai sujungti laidais arba Wi-Fi, VLAN gali naudoti tuos pačius laidus ir pan., bet yra atskirtas dar ir logiškai/virtualiai.
+VLAN pigesnis už LAN
+        </p>
+        <a href="https://www.geeksforgeeks.org/computer-networks/difference-between-lan-and-vlan/"> Čia svarbu -- pirma pastraipa ir lentelė</a>
     </div>
 
 
@@ -258,6 +290,9 @@ VLAN per komutatorius, LAN per maršrutizatorių
 Griečiau
 Saugiau
         </p>
+        <p class=a> 
+Pritariu sau...
+        </p>
     </div>
 
 
@@ -267,6 +302,11 @@ Saugiau
         <p> 
 Sukuria vietinį tinklą ir veikia kaip durys į išorės pasaulį.
         </p>
+        <p class=a>
+Maršrutizatorius yra įrenginys, kuris sujungia du ar daugiau tinklų ar potinklių. 
+Ir maršrutizuoja/tvarko paketus tarp jų.
+        </p>
+        <a href="https://www.cloudflare.com/en-gb/learning/network-layer/what-is-a-router/"> https://www.cloudflare.com/en-gb/learning/network-layer/what-is-a-router/ </a>
     </div>
 
 
@@ -277,6 +317,11 @@ Sukuria vietinį tinklą ir veikia kaip durys į išorės pasaulį.
 TCP saugus, lėtas, surušiuotas pagal laiką protokolas 
 UDP tiesiog išsviedžia paketus į maždaug gavėjo kryptį ir tikisi, kad jie nukeliaus (sprendžiant iš HTTP 3, šiandien nukeliauja...). 
         </p>
+        <p class=a>
+
+Ir vėl, pritariu sau, nors dar galiu pridėti: su TCP reikia „paspausti ranką“ (standartinis terminas) prieš siunčiant paketus.
+Aš anksčiau rašydavau serverius (programoms) su UDP ir TCP, tai šitą žinau neblogai 
+        </p>
     </div>
 
 
@@ -286,6 +331,11 @@ UDP tiesiog išsviedžia paketus į maždaug gavėjo kryptį ir tikisi, kad jie 
         <p> 
 RIP nesąveikauja su potinkliais. Kaukės yra ignoruojamos, žiūrima tik į adreso klasę. kad nesąveikauja ir yra problema.
         </p>
+        <p class=a>
+RIPv1, pasirodo, neveikia tik su VLSM (kur potinkliai turi skirtingas kaukes)..?
+Tipo, visi potinkliai tinkle turi turėti tokio pačio dydžio kaukę.
+        </p>
+        <a href="https://www.geeksforgeeks.org/computer-networks/differences-between-ripv1-and-ripv2/"> Pirma pastraipa </a>
     </div>
 
 
@@ -297,6 +347,11 @@ Jei kaukės vienodos ir adresai vienodi, tada priklauso
 Jei kaukės skiriasi ir ilgesnės kaukės dalis (kuri nėra trumpesnėje kaukėje) adrese yra tik nuliukai, irgi priklauso
 Jei kaukės skiriasi ir adresai skiriasi, tada nepriklauo
         </p>
+        <p class=a>
+Paaiškinime, tiesiog sako patikrinti adresus ten kur kaukėje yra tinklo dalis.
+Adrese gali skirtis tik kaukės hostų dalis.
+        </p>
+        <a href="https://peachyping.com/blog/how-to-determine-if-two-addresses-belong-to-the-same-network/"> Čia irgi paaiškina </a>
     </div>
 
 
@@ -305,6 +360,12 @@ Jei kaukės skiriasi ir adresai skiriasi, tada nepriklauo
         <i> Kas atsitinka, kai maršrutizatorius negali rasti tinkamo maršruto į paskirties adresą? </i>
         <p> 
 Pranešama gavėjui. Bent jau su ICMP ir TCP tai tikrai. UDP, turbūt, mažiau.
+        </p>
+        <p class=a>
+Nu velniop.
+
+<a href="https://community.cisco.com/t5/switching/when-a-router-is-unable-to-find-a-known-route-in-the-routing/td-p/3046190">Suradau šitą forumų postą. </a>
+Tipo, tiesiog pameta paketą...
         </p>
     </div>
 
