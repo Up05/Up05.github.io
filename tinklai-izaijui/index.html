@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        div {
+            padding-top: 1em;
+            border-bottom: 1px black dashed;
+        }
+        p {
+            background: #f5f2f2;
+            padding-left: 0.5em;
+            margin-left: 2em;
+            white-space: pre;
+
+        }
+
+        table {
+            background: #f5f2f2;
+            padding-left: 0.5em;
+            margin-left: 2em;
+            white-space: pre;
+        }
+
+        .a {
+            background: #d0ffa0;
+        }
+
+        img {
+            display: block;
+            border: 1px black solid;
+        }
+    </style>
+</head>
+
+<body>
+    <div class=kl>
+        <span class=question-number></span>
+        <i> Apibūdinkite kiekvieną OSI modelio sluoksnį ir pateikite pavyzdžius, kas veikia tame sluoksnyje. </i>
+        <p>
+Taikomasis - programos inicijuoja užklausas
+Interneto - HTTP ir SMTP ir panašūs protokolai yra sukūriami
+...
+... - Paketas šifruojamas su TLS ir pan.
+Tinklo - Parenkamas maršrutas, perduodami paketai su UDP / TCP
+Transporto - Priskiriami fiziniai adresai per ARP
+Fizinis - fiziškai kažkokiu būdu nusiunčiamas paketas
+        </p>
+<table class=a> 
+    <tr> <td> 7. Taikomasis   </td> <td> Vartotojui, čia yra HTTP, SMTP (Simple Main Transfer Protocol) ir FTP (File ...) </td> </tr>
+    <tr> <td> 6. Atvaizdavimo </td> <td> Duomenų formatavimas, suspaudimas ir užšifravimas </td> </tr>
+    <tr> <td> 5. Sesijos      </td> <td> <a href="https://developer.mozilla.org/en-US/docs/Glossary/TCP_handshake">Paspaudžia ranką</a>, prie paketo prideda išsiuntimo laiką ir t.t. </td> </tr>
+    <tr> <td> 4. Transporto   </td> <td> TCP ir UDP, prižiūri, kad paketai būtų nusiųsti, patikrina juos dėl klaidų ir surušiuoja pagal laiką </td> </tr>
+    <tr> <td> 3. Tinklo       </td> <td> Išsiaiškina greičiausią kelią paketams pasiekti gavėją, sutvarko adresavimą, čia: IP, ICMP ir RIP </td> </tr>
+    <tr> <td> 2. Ryšio        </td> <td> Veikia su MAC adresais </td> </tr>
+    <tr> <td> 1. Fizinis      </td> <td> Pavyzdžiui, kabelis arba Wi-Fi </td> </tr>
+</table>
+    <i> Čia iš mano tinklų užrašų, jei neklystu originaliai paimta iš Moodle ir tiesiog interneto</i>
+    </div>
+
+
+    <div class=kl>
+        <span class=question-number></span>
+        <i> Kas yra segmentavimas ir kuriame OSI sluoksnyje jis vyksta? </i>
+        <p> 
+tinklo atskirimas per virtualius LAN, 
+
+turbūt 3-iame sluoksnyje
+        </p>
+        <p class=a>
+Jo, tinklo „eismo“ atskyrimas. 
+Cisco pavyzdys yra: banke skirtingi skyrių tinklai yra tiesiog atskirti ir jie negali liesti kitų informacijos. 
+Kaip atskirti: Ugniasienės, ACL ir <b>VLAN</b>
+<a href="https://www.google.com/search?q=Which+OSI+is+VLAN"> VLAN yra aiškiai 2 OSI sluoksnyje </a>
+        </p>
+        <i> Paimta iš: <a href="https://www.cisco.com/site/us/en/learn/topics/security/what-is-network-segmentation.html">https://www.cisco.com/site/us/en/learn/topics/security/what-is-network-segmentation.html</a> </i>
+    </div>
+
+
+    <div class=kl>
+        <span class=question-number></span>
+        <i> Kuo skiriasi transporto ir tinklo sluoksniai OSI modelyje? </i>
+        <p> 
+Tinklo dirba su viešais tinklais ir TCP, UDP paketų tipais
+O transporto yra vietiniame tinkle ir dirba su ARP paketais
+        </p>
+        <p class=a>
+Tinklo sluoksnis ieško maršrutų, o Transporto siunčia ir rūpinasi UDP ir TCP paketais.
+        </p>
+
+        <a href="https://www.geeksforgeeks.org/computer-networks/transport-layer-in-osi-model/"> Transporto sluoksnis </a>
+    </div>
+
+
+    <div class=kl>
+        <span class=question-number></span>
+        <i> Kuris OSI sluoksnis atsakingas už adresavimą ir maršruto parinkimą? </i>
+        <p> 
+Tinklo
+        </p>
+        <p class=a>
+Tinklo, tiesiog
+        </p>
+    </div>
+
+
+    <div class=kl>
+        <span class=question-number></span>
+        <i> Palyginkite MAC ir IP adresus – kuo jie skiriasi ir kam naudojami? </i>
+        <p> 
+MAC yra fizinis mašinos adresas, jis nesikeičia, yra vietiniame tinkle.
+IP yra virtualus tinklo mazgo adresas, jis net nebūtinai nusako vieną kompiuterį, užtat naudojamas kaip kelias į kompiuterį ir vietiniame, ir viešuose tinkluose
+        </p>
+        <p class=a>
+MAC adresas yra fizinis, skirtas unikaliai identifikuoti kompiuterį, o IP yra skirtas identifikuoti tinklo mazgą. 
+        </p>
+        <a href="https://www.geeksforgeeks.org/computer-networks/difference-between-mac-address-and-ip-address/"> Truputi žemiau yra skyrius: „Difference Between MAC Address and IP Address“ </a>
+    </div>
+
+
+    <div class=kl>
+        <span class=question-number></span>
+        <i> Kas yra „broadcast“ tinkluose ir kokį vaidmenį jis atlieka ARP veikime? </i>
+        <p> 
+Kai paketas nusiunčiamas į broadcast adresą, jis yra perduodamas visiems tinklo mazgams.
+ARP paketai yra perduodami transliaciniu būdu.
+        </p>
+        <p class=a>
+            Broadcast (tinkluose) - būdas perduoti žinutę visiems dalyviams vienu metu.
+            ARP (adresų rezoliucijos protokas) yra siunčiamas transliaciniu(broadcast) būdu
+        </p>
+
+        <a href="https://en.wikipedia.org/wiki/Broadcasting_(networking)"> Vikipedija „Broadcasting“ </a> <br>
+        <i> Jų serveris numirė, tai čia tiesiog ekrano nuotrauka... </i>
+        <img src="s_20.png">
+    </div>
+
+
+    <div class=kl>
+        <span class=question-number></span>
+        <i> Kaip ARP gali būti išnaudojamas atakoms? </i>
+        <p> 
+Bet kuris kompiuteris gali pasakyti(perduoti savo MAC), kad jo IP adresas yra toks, kurio nori ARP paketo siuntėjas, 
+nors jo IP iš tikro yra kitoks ir kreipiamasi iš vis ne į tą kompiuterį.
+        </p>
+    </div>
+
+
+    <div class=kl>
+        <span class=question-number></span>
+        <i> Kaip kompiuteris sužino MAC adresą, kai žinomas tik IP adresas? </i>
+        <p> 
+Kitų:
+Padaro transliacinę užklausą visam tinkle, paklause visų to tiklo kompiuterių, kad, 
+jei jų IP adresas yra toks ir toks, jie tegul atsiunčia savo MAC adresą.
+        </p>
+    </div>
+
+
+    <div class=kl>
+        <span class=question-number></span>
+        <i> Paaiškinkite, kaip ARP veikia, kai siuntėjas ir gavėjas yra skirtinguose tinkluose. </i>
+        <p> 
+Netiesiogiai. Pirmiausia IP paketas turi nukeliauti iš siuntėjo vietinio tinklo į gavėjo ir 
+tik tada galima daryti transliacinio adreso užklausą arba nurodyti MAC paketo headeryje.
+        </p>
+    </div>
+
+
+    <div class=kl>
+        <span class=question-number></span>
+        <i> Paaiškinkite skirtumą tarp tinklo adreso, transliacijos adreso ir galimų IP adresų. </i>
+        <p> 
+Tinklo adresas yra 0-inis. Pagal kaukę, hostų adreso dalis turi būti nulis.
+Transliacinis toks pats kaip tinklo, bet hostų adreso dalis turi būti pilna vienetukų (dvejetainėje skaičiavimo sistemoje).
+Galimi IP adresai yra visi kurie liko, hostų dalį yra ir nuliukų, ir vienetukų.
+        </p>
+    </div>
+
+
+    <div class=kl>
+        <span class=question-number></span>
+        <i> Ką reiškia, kai potinklio kaukė yra 255.255.255.240? </i>
+        <p> 
+Liko 14 galimų hostų
+...
+        </p>
+    </div>
+
+
+    <div class=kl>
+        <span class=question-number></span>
+        <i> Paaiškinkite, kaip potinkliai padeda sumažinti tinklo apkrovą. </i>
+        <p> 
+Transliacines užklausas reikia nusiųsti į mažiau kompiuterių 
+        </p>
+    </div>
+
+
+    <div class=kl>
+        <span class=question-number></span>
+        <i> Kas yra VLAN ir kokias problemas jis padeda išspręsti? </i>
+        <p> 
+Virtualus vietinis tinklas. Atskiria tinklą. Vėl, transliacines užklausos siuntinėti yra mažiau darbo.  Segmentavimas vistiek atneša ir biški saugumo. 
+        </p>
+    </div>
+
+
+    <div class=kl>
+        <span class=question-number></span>
+        <i> Kaip VLAN skiriasi nuo fizinio tinklo segmentavimo? </i>
+        <p> 
+VLAN per komutatorius, LAN per maršrutizatorių
+        </p>
+    </div>
+
+
+    <div class=kl>
+        <span class=question-number></span>
+        <i> Kuo naudinga logiškai atskirti vartotojus į skirtingus VLAN? </i>
+        <p> 
+Žinai kuriam kompanijos pastato aukšte, kam nors nutiko problema su tinklu.
+Griečiau
+Saugiau
+        </p>
+    </div>
+
+
+    <div class=kl>
+        <span class=question-number></span>
+        <i> Kas yra maršrutizatorius ir koks jo vaidmuo tinkle? </i>
+        <p> 
+Sukuria vietinį tinklą ir veikia kaip durys į išorės pasaulį.
+        </p>
+    </div>
+
+
+    <div class=kl>
+        <span class=question-number></span>
+        <i> Paaiškinkite skirtumą tarp TCP ir UDP protokolų. </i>
+        <p> 
+TCP saugus, lėtas, surušiuotas pagal laiką protokolas 
+UDP tiesiog išsviedžia paketus į maždaug gavėjo kryptį ir tikisi, kad jie nukeliaus (sprendžiant iš HTTP 3, šiandien nukeliauja...). 
+        </p>
+    </div>
+
+
+    <div class=kl>
+        <span class=question-number></span>
+        <i> Kaip RIP sąveikauja su potinkliais ir kokios problemos gali kilti su V1 versija? </i>
+        <p> 
+RIP nesąveikauja su potinkliais. Kaukės yra ignoruojamos, žiūrima tik į adreso klasę. kad nesąveikauja ir yra problema.
+        </p>
+    </div>
+
+
+    <div class=kl>
+        <span class=question-number></span>
+        <i> Kaip galima nustatyti, ar du IP adresai priklauso tam pačiam potinkliui? </i>
+        <p> 
+Jei kaukės vienodos ir adresai vienodi, tada priklauso
+Jei kaukės skiriasi ir ilgesnės kaukės dalis (kuri nėra trumpesnėje kaukėje) adrese yra tik nuliukai, irgi priklauso
+Jei kaukės skiriasi ir adresai skiriasi, tada nepriklauo
+        </p>
+    </div>
+
+
+    <div class=kl>
+        <span class=question-number></span>
+        <i> Kas atsitinka, kai maršrutizatorius negali rasti tinkamo maršruto į paskirties adresą? </i>
+        <p> 
+Pranešama gavėjui. Bent jau su ICMP ir TCP tai tikrai. UDP, turbūt, mažiau.
+        </p>
+    </div>
+
+
+    <div class=kl>
+        <span class=question-number></span>
+        <i> Sudaryti ir sukonfiguruoti tinklą pagal nuotrauką: </i>
+        <img src=tinklas.png alt=tinklo-topologija height=600>
+        <details>
+        <summary> Visa mano tinklo konfiguracija (daug teksto) </summary>
+        <p> 
+SWITCH0
+
+VLAN Name Status Ports
+
+---- -------------------------------- --------- -------------------------------
+
+1 default active Fa0/3, Fa0/4, Fa0/5, Fa0/6
+
+Fa0/7, Fa0/8, Fa0/9, Fa0/10
+
+Fa0/11, Fa0/12, Fa0/13, Fa0/14
+
+Fa0/15, Fa0/16, Fa0/17, Fa0/18
+
+Fa0/19, Fa0/20, Fa0/21, Fa0/22
+
+Fa0/23, Fa0/24
+
+10 VLAN10 active
+
+20 VLAN20 active
+
+1002 fddi-default active
+
+1003 token-ring-default active
+
+1004 fddinet-default active
+
+1005 trnet-default active
+
+interface FastEthernet0/1
+
+switchport mode trunk
+
+!
+
+interface FastEthernet0/2
+
+switchport mode trunk
+
+interface FastEthernet0/12
+
+switchport mode trunk
+
+
+
+SWITCH1
+
+VLAN Name Status Ports
+
+---- -------------------------------- --------- -------------------------------
+
+1 default active Fa0/3, Fa0/4, Fa0/5, Fa0/6
+
+Fa0/7, Fa0/8, Fa0/9, Fa0/10
+
+Fa0/11, Fa0/12, Fa0/13, Fa0/14
+
+Fa0/15, Fa0/16, Fa0/17, Fa0/18
+
+Fa0/19, Fa0/20, Fa0/21, Fa0/22
+
+Fa0/23, Fa0/24
+
+10 VLAN10 active
+
+20 VLAN20 active
+
+1002 fddi-default active
+
+1003 token-ring-default active
+
+1004 fddinet-default active
+
+1005 trnet-default active
+
+
+interface FastEthernet0/1
+
+switchport mode trunk
+
+!
+
+interface FastEthernet0/2
+
+switchport mode trunk
+
+interface FastEthernet0/12
+
+switchport mode trunk
+
+
+ROUTER0
+
+Codes: C - connected, S - static, I - IGRP, R - RIP, M - mobile, B - BGP
+
+D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+
+N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+
+E1 - OSPF external type 1, E2 - OSPF external type 2, E - EGP
+
+i - IS-IS, L1 - IS-IS level-1, L2 - IS-IS level-2, ia - IS-IS inter area
+
+* - candidate default, U - per-user static route, o - ODR
+
+P - periodic downloaded static route
+
+
+Gateway of last resort is not set
+
+
+193.16.0.0/30 is subnetted, 1 subnets
+
+C 193.16.0.0 is directly connected, Serial0/0/0
+
+
+interface FastEthernet0/0
+
+no ip address
+
+duplex auto
+
+speed auto
+
+shutdown
+
+!
+
+interface FastEthernet0/1
+
+no ip address
+
+duplex auto
+
+speed auto
+
+shutdown
+
+!
+
+interface Serial0/0/0
+
+ip address 193.16.0.1 255.255.255.252
+
+clock rate 2000000
+
+!
+
+interface Vlan1
+
+no ip address
+
+shutdown
+
+!
+
+router rip
+
+version 2
+
+
+ROUTER1
+
+Codes: C - connected, S - static, I - IGRP, R - RIP, M - mobile, B - BGP
+
+D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+
+N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+
+E1 - OSPF external type 1, E2 - OSPF external type 2, E - EGP
+
+i - IS-IS, L1 - IS-IS level-1, L2 - IS-IS level-2, ia - IS-IS inter area
+
+* - candidate default, U - per-user static route, o - ODR
+
+P - periodic downloaded static route
+
+
+Gateway of last resort is not set
+
+
+C 192.168.0.0/16 is directly connected, FastEthernet0/0
+
+193.16.0.0/30 is subnetted, 1 subnets
+
+C 193.16.0.0 is directly connected, Serial0/0/0
+
+interface FastEthernet0/0
+
+ip address 192.168.0.1 255.255.0.0
+
+duplex auto
+
+speed auto
+
+!
+
+interface FastEthernet0/1
+
+no ip address
+
+duplex auto
+
+speed auto
+
+shutdown
+
+!
+
+interface Serial0/0/0
+
+ip address 193.16.0.2 255.255.255.252
+
+!
+
+interface Vlan1
+
+no ip address
+
+shutdown
+
+!
+
+router rip
+
+version 2
+
+!
+
+ip classless
+        </p>
+        </details>
+    </div>
+
+
+
+    <script>
+        let counter = 1
+        document.querySelectorAll(".question-number").forEach(e => e.innerText = (counter ++) + '.')
+    </script>
+</body>
+
+</html>
