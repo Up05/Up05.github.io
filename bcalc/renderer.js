@@ -138,8 +138,9 @@ function cell_size_heuristic(text) {
     return count * 12 + 2
 }
 
-
+let not_monotone = false
 function render_monotone_func(truth_table) {
+    not_monotone = false
     if(truth_table == null) return null
 
     canvas = document.createElement('canvas');
@@ -223,21 +224,27 @@ function render_monotone_func(truth_table) {
             let cell2 = row2[row2.length - 1]
 
             if((cell-0) > (cell2-0)) {
+                not_monotone = true
+
                 let mid_x = (x2 + x1) / 2
                 let mid_y = (y2 + y) / 2
 
+                ctx.translate(mid_x, mid_y)
+                ctx.rotate(-Math.PI / 6)
+
                 ctx.beginPath();
                 ctx.strokeStyle = 'white'
-                ctx.moveTo(mid_x - 15, mid_y - 15)
-                ctx.lineTo(mid_x + 15, mid_y + 15)
+                ctx.moveTo(- 15, - 15)
+                ctx.lineTo(+ 15, + 15)
                 ctx.stroke();
 
                 ctx.beginPath();
                 ctx.strokeStyle = 'white'
-                ctx.moveTo(mid_x + 15, mid_y - 15)
-                ctx.lineTo(mid_x - 15, mid_y + 15)
+                ctx.moveTo(+ 15, - 15)
+                ctx.lineTo(- 15, + 15)
                 ctx.stroke();
 
+                ctx.setTransform(1, 0, 0, 1, 0, 0);
             }
 
         }

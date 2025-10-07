@@ -123,7 +123,16 @@ function handle_keypad(key) {
         let diagram = render_monotone_func(the_table)
         if(diagram != null) {
             by_id("mono").appendChild(diagram)
+            if(not_monotone) {
+                let br = document.createElement("br")
+                by_id("mono").appendChild(br)
+
+                let elem = document.createElement("i")
+                elem.innerText = "Funkcija nėra monotoniška"
+                by_id("mono").appendChild(elem)
+            }
         }
+
     }
 }
 
