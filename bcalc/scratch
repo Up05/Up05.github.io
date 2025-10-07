@@ -1,0 +1,35 @@
+   
+   |
+abc[de
+
+abc de
+
+
+
+
+
+
+
+
+/*
+ *soft SPECS:
+ *  When inserting '[' the calculator should enter into
+ *  a separate mode with an indicator (maybe green light)
+ *  here you shouldn't be able to do anything but enter ']' (maybe on next press of '['?)
+ *
+ *  when '[' is deleted, find matching ']' and delete it
+ *  when ']' is deleted, find matching '[' and delete it
+ *  when cursor is on '[' or ']' highlight the line above
+ *
+ *  when ']' is before '[', swap em
+ *
+ *  when ']' goes outside of parentheses don't let it go further
+ *  if cursor is on an operator automatically select the vars around it
+ *
+ *  function that draws the standard expression
+ *  function that parses the std. expression
+ *
+ *
+*/
+
+/*
