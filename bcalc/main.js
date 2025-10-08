@@ -143,8 +143,8 @@ function lookup_key(key) {
         '⊕': 'o', // XOR
         '⇒': '>', // IMPLY
         '⇔': '=', // EQUAL
-        '|': '^', // NAND
-        '↓': '|', // NOR
+        '↓': '^', // NOR
+        '|': '|', // NAND
     };
 
     return key_map[key] || key;

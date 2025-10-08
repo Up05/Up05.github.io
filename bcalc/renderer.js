@@ -5,8 +5,8 @@ function lookup_token_char(token) {
         'o': '⊕', // XOR
         '>': '⇒', // IMPLY
         '=': '⇔', // EQUAL
-        '^': '|', // NAND
-        '|': '↓', // NOR
+        '|': '|', // NOR
+        '^': '↓', // NAND
     };
 
     return token_char_map[token] || token;
@@ -135,7 +135,7 @@ function cell_size_heuristic(text) {
         if(is_any(r, ' ', '[', ']')) continue;
         count ++ 
     }
-    return count * 12 + 2
+    return count * 13 + 2
 }
 
 let not_monotone = false
@@ -226,11 +226,11 @@ function render_monotone_func(truth_table) {
             if((cell-0) > (cell2-0)) {
                 not_monotone = true
 
-                let mid_x = (x2 + x1) / 2
-                let mid_y = (y2 + y) / 2
+                let mid_x = x2*0.33 + x1*0.66
+                let mid_y = y2*0.33 +  y*0.66
 
                 ctx.translate(mid_x, mid_y)
-                ctx.rotate(-Math.PI / 6)
+                ctx.rotate(Math.PI / 6 * ( y2 < y ? -1 : 1 ))
 
                 ctx.beginPath();
                 ctx.strokeStyle = 'white'

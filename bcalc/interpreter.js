@@ -70,11 +70,25 @@ function parse_operator(expr_ref, min_prec = -1) {
     return lhs;
 }
 
+function get_op_prec(op) {
+    const prec = {
+        '&': 4,
+        '^': 4,
+        'v': 3,
+        'o': 3,
+        '|': 3,
+        '>': 2,
+        '=': 1,
+    };
+    
+    return prec[op] || 1
+}
+
 function parse_inc_prec(expr_ref, lhs, min_prec) {
     const operator = expr_ref.value[0];
     if (!is_operator(operator)) return lhs;
 
-    const prec = operator === '&' ? 2 : 1;
+    const prec = get_op_prec(operator);
     if (min_prec >= prec) return lhs;
 
     expr_ref.value = expr_ref.value.slice(1);
